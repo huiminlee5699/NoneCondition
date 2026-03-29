@@ -249,9 +249,6 @@
 
 
         async function handleTriggerQuestion(messageContent, responseObj) {
-            let hasClickedSource = false;
-            
-
             const dots = document.createElement('div');
             dots.className = 'typing-indicator';
             dots.innerHTML = '<span></span><span></span><span></span>';
@@ -273,27 +270,13 @@
             messageContent.appendChild(answerLine);
             const textSpan = document.createElement('span');
             answerLine.appendChild(textSpan);
-            
-            const sourceBubble = document.createElement('span');
-            sourceBubble.className = 'source-bubble';
-            sourceBubble.innerHTML = '&#128279; ' + responseObj.sourceLabel;
-            sourceBubble.style.visibility = 'hidden';
-            sourceBubble.addEventListener('click', () => {
-                if (!hasClickedSource) {
-                    hasClickedSource = true;
-                    trackEvent({ type: 'source_click', topic: responseObj.topic, sourceLabel: responseObj.sourceLabel });
-                }
-                showModal('This function is not available at this time.');
-            });
-            answerLine.appendChild(sourceBubble);
 
-                        const verifyPill = null;
-            const actionRow = buildActionRow(responseObj.answer, responseObj.topic, verifyPill);
+            // No source bubble, no verify pill
+            const actionRow = buildActionRow(responseObj.answer, responseObj.topic, null);
             actionRow.style.visibility = 'hidden';
             messageContent.appendChild(actionRow);
 
             await streamText(textSpan, responseObj.answer);
-            sourceBubble.style.visibility = 'visible';
             actionRow.style.visibility = 'visible';
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
